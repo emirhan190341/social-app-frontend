@@ -34,7 +34,6 @@ const PostPage = () => {
           <BsThreeDots />
         </Flex>
       </Flex>
-      .
 
       <Text my={3}>Let's talk about Threads.</Text>
 
