@@ -13,10 +13,11 @@ import {
   Text,
   useColorModeValue,
   Link,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import {useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import authScreenAtom from "../atoms/authAtom";
 import { useNavigate } from "react-router-dom";
 import userAtom from "../atoms/userAtom";
@@ -25,7 +26,7 @@ export default function SignupCard() {
   const [showPassword, setShowPassword] = useState(false);
   const setAuthScreen = useSetRecoilState(authScreenAtom);
 
-  const setUser = useSetRecoilState(userAtom)
+  const setUser = useSetRecoilState(userAtom);
 
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
@@ -34,27 +35,97 @@ export default function SignupCard() {
 
   const navigate = useNavigate();
 
-  const handleSignup = () => {
-   const res = fetch("http://localhost:8080/api/v1/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: username,
-        name: name,
-        email: email,
-        password: password,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        localStorage.setItem("tokenKey", result.token);
-        localStorage.setItem("email", email);
-        localStorage.setItem("user-threads",JSON.stringify(result))
-        setUser(result);
-      })
-      .catch((err) => console.log(err));
+  const toast = useToast();
+
+  // const handleSignup = () => {
+  //   const res = fetch("http://localhost:8080/api/v1/auth/register", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       username: username,
+  //       name: name,
+  //       email: email,
+  //       password: password,
+  //     }),
+  //   })
+  //     .then((res) =>{
+  //       if(res.status === 400) {
+  //         toast({
+  //           title: "Error",
+  //           description: "User already exists",
+  //           status: "error",
+  //           duration: 3000,
+  //           isClosable: true,
+  //         });
+  //         console.log(res.json())
+  //         return;
+  //       }
+  //     })
+  //     .then((result) => {
+  //       localStorage.setItem("tokenKey", result.token);
+  //       localStorage.setItem("email", email);
+  //       localStorage.setItem("user-threads", JSON.stringify(result));
+  //       console.log(result);
+
+  //       // if (result.error) {
+  //       //   console.log
+  //       //   toast({
+  //       //     title: "Error",
+  //       //     description: res.error,
+  //       //     status: "error",
+  //       //     duration: 3000,
+  //       //     isClosable: true,
+  //       //   });
+  //       // }
+  //       setUser(result);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  const handleSignup = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/api/v1/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          name: name,
+          email: email,
+          password: password,
+        }),
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.email || data.username || data.password || data.name) {
+        const error = data.email || data.username || data.password || data.name;
+        toast({
+          title: "Error",
+          description: error,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
+      }
+
+      //Kullanici bilgileri + token
+      localStorage.setItem("tokenKey", data.token);
+      localStorage.setItem("email", email);
+      // localStorage.setItem("user-threads", JSON.stringify(data));
+      setUser(data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   return (

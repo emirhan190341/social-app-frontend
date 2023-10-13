@@ -1,4 +1,3 @@
-import LoginPage from "./pages/LoginPage";
 import { Navigate, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import PostPage from "./pages/PostPage";
@@ -24,10 +23,9 @@ function App() {
             element={user ? <HomePage /> : <Navigate to="/auth" />}
           />
           <Route
-            path="/signup"
+            path="/auth"
             element={!user ? <AuthPage /> : <Navigate to="/" />}
           />
-          <Route path="/login" element={<LoginPage />} />
           <Route path="/post" element={<PostPage />} />
           <Route path="/user" element={<UserPage />} />
         </Routes>
