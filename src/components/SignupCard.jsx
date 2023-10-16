@@ -37,53 +37,6 @@ export default function SignupCard() {
 
   const toast = useToast();
 
-  // const handleSignup = () => {
-  //   const res = fetch("http://localhost:8080/api/v1/auth/register", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       username: username,
-  //       name: name,
-  //       email: email,
-  //       password: password,
-  //     }),
-  //   })
-  //     .then((res) =>{
-  //       if(res.status === 400) {
-  //         toast({
-  //           title: "Error",
-  //           description: "User already exists",
-  //           status: "error",
-  //           duration: 3000,
-  //           isClosable: true,
-  //         });
-  //         console.log(res.json())
-  //         return;
-  //       }
-  //     })
-  //     .then((result) => {
-  //       localStorage.setItem("tokenKey", result.token);
-  //       localStorage.setItem("email", email);
-  //       localStorage.setItem("user-threads", JSON.stringify(result));
-  //       console.log(result);
-
-  //       // if (result.error) {
-  //       //   console.log
-  //       //   toast({
-  //       //     title: "Error",
-  //       //     description: res.error,
-  //       //     status: "error",
-  //       //     duration: 3000,
-  //       //     isClosable: true,
-  //       //   });
-  //       // }
-  //       setUser(result);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
   const handleSignup = async () => {
     try {
       const res = await fetch("http://localhost:8080/api/v1/auth/register", {
@@ -115,7 +68,7 @@ export default function SignupCard() {
       //Kullanici bilgileri + token
       localStorage.setItem("tokenKey", data.token);
       localStorage.setItem("email", email);
-      // localStorage.setItem("user-threads", JSON.stringify(data));
+      localStorage.setItem("user-threads", JSON.stringify(data));
       setUser(data);
     } catch (error) {
       toast({

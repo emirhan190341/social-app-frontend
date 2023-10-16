@@ -29,6 +29,7 @@ export default function LoginCard() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const toast = useToast();
 
   const handleLogin = async () => {
@@ -43,6 +44,7 @@ export default function LoginCard() {
           body: JSON.stringify({
             email: email,
             password: password,
+            username: username
           }),
         }
       );
@@ -63,7 +65,7 @@ export default function LoginCard() {
       //Kullanici bilgileri + token
       localStorage.setItem("tokenKey", data.token);
       localStorage.setItem("email", email);
-      // localStorage.setItem("user-threads", JSON.stringify(data));
+      localStorage.setItem("user-threads", JSON.stringify(data));
       setUser(data);
     } catch (error) {
       toast({
@@ -101,6 +103,14 @@ export default function LoginCard() {
                 type="text"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
+              />
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Username</FormLabel>
+              <Input
+                type="text"
+                onChange={(e) => setUsername(e.target.value)}
+                value={username}
               />
             </FormControl>
             <FormControl isRequired>

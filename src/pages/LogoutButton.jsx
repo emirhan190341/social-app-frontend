@@ -2,6 +2,7 @@ import { Button } from "@chakra-ui/react";
 import React from "react";
 import { useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
+import { FiLogOut } from "react-icons/fi";
 
 const LogoutButton = () => {
   const setUser = useSetRecoilState(userAtom);
@@ -39,6 +40,7 @@ const LogoutButton = () => {
       if (res.status === 200) {
         localStorage.removeItem("tokenKey");
         localStorage.removeItem("email");
+        localStorage.removeItem("user-threads");
         setUser(null);
       }
     } catch (error) {
@@ -54,7 +56,7 @@ const LogoutButton = () => {
       size={"sm"}
       onClick={handleLogout}
     >
-      Logout
+      <FiLogOut size={20} />
     </Button>
   );
 };
