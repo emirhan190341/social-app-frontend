@@ -15,7 +15,7 @@ import {
 import React, { useState } from "react";
 import { BsInstagram } from "react-icons/bs";
 import { CgMoreO } from "react-icons/cg";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { Link, Link as RouterLink } from "react-router-dom";
 import useShowToast from "../hooks/useShowToast";
@@ -23,15 +23,13 @@ import useShowToast from "../hooks/useShowToast";
 const UserHeader = ({ user }) => {
   const toast = useToast();
   const showToast = useShowToast();
-  const [updating,setUpdating] = useState(false);
 
-
+  const [updating, setUpdating] = useState(false);
   const currentUser = useRecoilValue(userAtom);
 
   const [following, setFollowing] = useState(
-    user.followers.includes(currentUser.user.id)
+    user.followers.includes(currentUser.user.id.toString())
   );
-  console.log(following);
 
   const copyUrl = () => {
     const currentUrl = window.location.href;
@@ -41,7 +39,7 @@ const UserHeader = ({ user }) => {
   };
 
   const handleFollowUnfollow = async () => {
-    if(!currentUser){
+    if (!currentUser) {
       showToast("Error", "Please login to follow", "error");
       return;
     }
@@ -58,7 +56,6 @@ const UserHeader = ({ user }) => {
           },
         }
       );
-
       setFollowing(!following);
 
       if (following) {
@@ -71,8 +68,7 @@ const UserHeader = ({ user }) => {
     } catch (error) {
       console.log(error);
       showToast("Error", "error", "error");
-
-    }finally{
+    } finally {
       setUpdating(false);
     }
   };

@@ -3,17 +3,16 @@ import UserHeader from "../components/UserHeader";
 import UserPost from "../components/UserPost";
 import useShowToast from "../hooks/useShowToast";
 import { useParams } from "react-router-dom";
+import { Flex, Spinner } from "@chakra-ui/react";
 
 const UserPage = () => {
   const [user, setUser] = useState(null);
-
   const { userId } = useParams();
-
   const showToast = useShowToast();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getUser = async () => {
-      console.log(localStorage.getItem("tokenKey"));
       try {
         const res = await fetch(`http://localhost:8080/v1/api/user/${userId}`, {
           method: "GET",
@@ -29,12 +28,22 @@ const UserPage = () => {
         setUser(data);
       } catch (error) {
         showToast("Error", "lala", "error");
+      } finally {
+        setLoading(false);
       }
     };
     getUser();
   }, [userId, showToast]);
 
-  if (!user) return null;
+  if (!user && loading) {
+    return (
+      <Flex justifyContent={"center"}>
+        <Spinner size={"xl"} />
+      </Flex>
+    );
+  }
+
+  if (!user && !loading) return <h1>User not found</h1>;
 
   return (
     <>

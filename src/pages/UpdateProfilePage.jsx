@@ -33,25 +33,35 @@ export default function UpdateProfilePage() {
 
   const { handleImageChange, imgUrl } = usePreviewImg();
 
-  console.log(imgUrl)
-  
+  console.log(imgUrl);
+
   const handleSubmit = async (e) => {
-    
+    e.preventDefault();
     try {
+
+      const formData = new FormData();
+      formData.append("file", fileRef.current.files[0]);
+      formData.append("name", inputs.name);
+      formData.append("username", inputs.username);
+      formData.append("bio", inputs.bio);
+      formData.append("password", inputs.password);
+
       const res = await fetch(
-        `http://localhost:8080/v1/api/user/update/${user.user.id}`,{
+        `http://localhost:8080/v1/api/user/update/${user.user.id}`,
+        {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${user.token}`,
           },
-          body: JSON.stringify({...inputs,profilePic:imgUrl}),
+          // body: JSON.stringify({ ...inputs, profilePic: imgUrl }),
+          body: JSON.stringify({ ...inputs, profilePic: imgUrl }),
         }
       );
       const data = await res.json();
       console.log(data);
     } catch (error) {
-      showToast("Error", error, "error");
+      showToast("Error", "error", "error");
     }
   };
 
